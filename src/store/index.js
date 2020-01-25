@@ -1,13 +1,15 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import api from "../api/shop.js";
+import shop from "../api/shop.js";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     products: [],
-    cart: []
+    cart: [],
+    checkoutError: false
   },
   mutations: {
     setProducts(state, products) {
@@ -31,6 +33,12 @@ export default new Vuex.Store({
     incrementProductInventory(state, item) {
       const product = state.products.find(product => product.id === item.id);
       product.inventory += item.quantity;
+    },
+    emptyCart(state) {
+      state.cart = [];
+    },
+    setCheckoutError(state, error) {
+      state.checkoutError = error;
     }
   },
   actions: {
@@ -68,6 +76,22 @@ export default new Vuex.Store({
 
       // Restaurar el inventario
       context.commit("incrementProductInventory", item);
+    },
+    checkout({ commit, state }) {
+      shop.buyProducts(
+        state.cart,
+        () => {
+          // Vaciar el carrito
+          commit("emptyCart");
+
+          // Establecer que no hay errores
+          commit("setCheckoutError", false);
+        },
+        () => {
+          // Establerce que hay errores
+          commit("setCheckoutError", true);
+        }
+      );
     }
   },
   getters: {
