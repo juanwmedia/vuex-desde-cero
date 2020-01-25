@@ -1,11 +1,12 @@
 <template>
   <div>
-    <h1>Listado de productos</h1>
+    <h2>Listado de productos</h2>
     <hr />
     <ul>
       <li v-for="product in products" :key="product.id">
         {{ product.title }} | {{ product.price }}
         <i>{{ product.inventory }} </i>
+        <button @click="addToCart(product)">Cart</button>
       </li>
     </ul>
   </div>
@@ -19,6 +20,11 @@ export default {
       await this.$store.dispatch("getProducts");
     } catch (error) {
       console.error(error);
+    }
+  },
+  methods: {
+    addToCart(product) {
+      this.$store.dispatch("addProductToCart", product);
     }
   },
   computed: {
