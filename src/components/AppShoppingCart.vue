@@ -8,9 +8,12 @@
         <button @click="removeItem($index)">X</button>
       </li>
     </ul>
+    <hr />
+    <h4>Total {{ cartTotal || 0 }}</h4>
   </div>
 </template>
 <script>
+import { currency } from "@/utils/currency.js";
 export default {
   name: "AppShoppingCart",
   methods: {
@@ -21,6 +24,9 @@ export default {
   computed: {
     cartItems() {
       return this.$store.getters.productsOnCart;
+    },
+    cartTotal() {
+      return currency(this.$store.getters.cartTotal, " €");
     }
   }
 };
