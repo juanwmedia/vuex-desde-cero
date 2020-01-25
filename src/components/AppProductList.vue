@@ -12,18 +12,18 @@
 </template>
 
 <script>
-import api from "../api/shop.js";
+// import api from "../api/shop.js";
 export default {
   name: "AppProductList",
-  data() {
-    return {
-      products: []
-    };
-  },
   created() {
-    api.getProducts(products => {
-      this.products = products;
-    });
+    // api.getProducts(products => {
+    //   this.products = products;
+    // });
+  },
+  computed: {
+    products() {
+      return this.$store.state.products;
+    }
   }
 };
 </script>
