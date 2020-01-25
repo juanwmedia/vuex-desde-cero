@@ -22,8 +22,15 @@ export default new Vuex.Store({
         quantity: 1
       });
     },
+    removeProductFromCart(state, index) {
+      state.cart.splice(index, 1);
+    },
     decrementProductInventory(state, product) {
       product.inventory--;
+    },
+    incrementProductInventory(state, item) {
+      const product = state.products.find(product => product.id === item.id);
+      product.inventory += item.quantity;
     }
   },
   actions: {
@@ -52,6 +59,15 @@ export default new Vuex.Store({
 
       // Independientemente, restar al inventario de ese producto
       context.commit("decrementProductInventory", product);
+    },
+    removeProductFromCart(context, index) {
+      const item = context.state.cart[index];
+
+      // Eliminar el producto del carrito
+      context.commit("removeProductFromCart", index);
+
+      // Restaurar el inventario
+      context.commit("incrementProductInventory", item);
     }
   },
   getters: {
