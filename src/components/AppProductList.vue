@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import api from "../api/shop.js";
 export default {
   name: "AppProductList",
-  created() {
-    api.getProducts(products => {
-      // this.products = products;
-      this.$store.commit("setProducts", products);
-    });
+  async created() {
+    try {
+      await this.$store.dispatch("getProducts");
+    } catch (error) {
+      console.error(error);
+    }
   },
   computed: {
     products() {

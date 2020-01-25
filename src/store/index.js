@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import api from "../api/shop.js";
 
 Vue.use(Vuex);
 
@@ -12,6 +13,15 @@ export default new Vuex.Store({
       state.products = products;
     }
   },
-  actions: {},
+  actions: {
+    getProducts({ commit }) {
+      return new Promise(resolve => {
+        api.getProducts(products => {
+          commit("setProducts", products);
+          resolve();
+        });
+      });
+    }
+  },
   modules: {}
 });
