@@ -3,7 +3,11 @@
     <h2>Listado de productos</h2>
     <hr />
     <ul>
-      <li v-for="product in products" :key="product.id">
+      <li
+        @click="selectProduct(product)"
+        v-for="product in products"
+        :key="product.id"
+      >
         {{ product.title }} | {{ product.price }}
         <i>{{ product.inventory }} </i>
         <button @click="addToCart(product)">Cart</button>
@@ -25,6 +29,9 @@ export default {
   methods: {
     addToCart(product) {
       this.$store.dispatch("addProductToCart", product);
+    },
+    selectProduct(product) {
+      this.$store.commit("setSelectedProduct", product);
     }
   },
   computed: {
