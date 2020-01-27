@@ -135,6 +135,11 @@ export default new Vuex.Store({
     },
     selectedProduct(state) {
       return state.selectedProduct;
+    },
+    nearlySoldOut(state) {
+      return id => {
+        return state.products.find(product => product.id === id).inventory < 2;
+      };
     }
   },
   modules: {}
