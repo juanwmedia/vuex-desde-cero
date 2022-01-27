@@ -1,38 +1,34 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import shop from "../api/shop.js";
-import cart from "./cart.js";
-import products from "./products.js";
+import api from "../api/shop.js";
+
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  strict: true,
-  modules: {
-    cart,
-    products
-  },
   state: {
-    checkoutError: false
+    products: [] // Unica fuente de datos verdadera
   },
   mutations: {
-    setCheckoutError(state, error) {
-      state.checkoutError = error;
+    addProducts(state, product) { // Mutamos el state, agregar producto
+      state.products = product
     }
   },
   actions: {
-    checkout({ commit, state }) {
-      shop.buyProducts(
-        state.cart.cart,
-        () => {
-          commit("emptyCart");
-          commit("setCheckoutError", false);
-        },
-        () => {
-          commit("setCheckoutError", true);
-        }
-      );
+    getProducts({ commit }) { // Mediante la accion getProducts
+      return new Promise(resolve => { //  realizamos el commit
+        api.getProducts(products => { //  de forma async
+          commit("addProducts", products);
+          resolve();
+        });
+      });
     }
   },
-  getters: {}
+  getters: {
+    productsOnStock(state) {
+      return state.products.filter(product => {
+        return product.inventory > 0;
+      });
+    }
+  }
 });
